@@ -9,9 +9,10 @@ namespace CurrencyConverter.Models
     public class CurrencyViewModel
     {
         public Guid UserId { get; set; }
+        public int Amount { get; set; }
+        public Guid CurrencyTypeId { get; set; }
 
         public SelectList CurrencyTypes { get; set; }
 
-        public int Amount { get; set; }
     }
 }

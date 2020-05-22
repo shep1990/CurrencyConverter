@@ -1,0 +1,18 @@
+﻿
+@model CurrencyViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<form method="post" action="@Url.Action("", "")" enctype="multipart/form-data">
+    <fieldset class="id-docs">
+        <div class="form-label-group">
+            @Html.DropDownList(nameof(Model.CurrencyTypeId), Model.CurrencyTypes, "Select Currency", new { @class = "form-control", required = "required" })
+            @Html.Label(nameof(Model.CurrencyTypeId), "Currency")
+        </div>
+    </fieldset>
+
+</form>

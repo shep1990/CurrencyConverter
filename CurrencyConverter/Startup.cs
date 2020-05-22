@@ -4,6 +4,8 @@ using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using CurrencyConverter.Domain;
+using CurrencyConverter.Domain.Repositories;
+using CurrencyConverter.Domain.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -33,6 +35,17 @@ namespace CurrencyConverter
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
+
+            services.AddScoped<ICurrencyService, CurrencyService>();
+            services.AddScoped<ICurrencyRepository, CurrencyRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>(
+                sp =>
+                {
+                    var context = sp.GetRequiredService<CurrencyConverterDbContext>();
+
+                    return new UnitOfWork(context);
+                });
+
 
             services.AddDbContext<CurrencyConverterDbContext>(options =>
             {
