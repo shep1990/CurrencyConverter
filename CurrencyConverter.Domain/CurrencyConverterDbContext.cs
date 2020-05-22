@@ -1,5 +1,6 @@
 ﻿using CurrencyConverter.Domain.Data;
 using CurrencyConverter.Domain.EntityConfiguration;
+using CurrencyConverter.Domain.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -20,6 +21,7 @@ namespace CurrencyConverter.Domain
             builder.ApplyConfiguration(new CurrencyEntityConfigurations());
             builder.ApplyConfiguration(new UserEntityConfigurations());
             builder.ApplyConfiguration(new CurrencyLoggingEntityConfigurations());
+            builder.Seed();
         }
     }
 }

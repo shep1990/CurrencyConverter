@@ -9,7 +9,5 @@ namespace CurrencyConverter.Domain.Data
         public Guid Id { get; set; }
 
         public string CurrencyName { get; set; }
-
-        public decimal CurrencyRate { get; set; }
     }
 }

@@ -69,12 +69,27 @@ namespace CurrencyConverter
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            ConfigureDb(app);
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=Currency}/{action=Index}/{id?}");
             });
+        }
+
+
+        protected virtual void ConfigureDb(IApplicationBuilder app)
+        {
+            try
+            {
+                using (var scope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+                {
+                    scope.ServiceProvider.GetRequiredService<CurrencyConverterDbContext>().Database.Migrate();
+                }
+            }
+            catch { }
         }
     }
 }
