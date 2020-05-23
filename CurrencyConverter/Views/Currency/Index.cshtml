@@ -1,18 +1,53 @@
-﻿
-@model CurrencyViewModel
+﻿@model CurrencyViewModel
 
 @{
     ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h1>Index</h1>
 
-<form method="post" action="@Url.Action("", "")" enctype="multipart/form-data">
+<form>
     <fieldset class="id-docs">
         <div class="form-label-group">
-            @Html.DropDownList(nameof(Model.CurrencyTypeId), Model.CurrencyTypes, "Select Currency", new { @class = "form-control", required = "required" })
-            @Html.Label(nameof(Model.CurrencyTypeId), "Currency")
+            @Html.DropDownList(nameof(Model.SourceCurrencyId), Model.CurrencyTypes, "Source Currency", new { @class = "form-control", required = "required" })
+            @Html.Label(nameof(Model.SourceCurrencyId), "Currency")
         </div>
     </fieldset>
-
+    <fieldset class="id-docs">
+        <div class="form-label-group">
+            @Html.DropDownList(nameof(Model.TargetCurrencyId), Model.CurrencyTypes, "Target Currency", new { @class = "form-control", required = "required" })
+            @Html.Label(nameof(Model.TargetCurrencyId), "Currency")
+        </div>
+    </fieldset>
+    <div class="form-label-group-wrapper">
+        <div class="form-label-group">
+            @Html.TextBox(nameof(Model.Amount), String.Empty, new { @class = "form-control", type = "text", name = "amount", required = "required" })
+            @Html.Label(nameof(Model.Amount), "Amount")
+        </div>
+    </div>
 </form>
+<button class="submit" type="button"></button>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script>
+        $('.submit').on('click', function () {
+        var model = {
+            sourceCurrency: $("#SourceCurrencyId option:selected").text(),
+            targetCurrency: $("#TargetCurrencyId option:selected").text(),
+            amount: $("#Amount").val()
+        }
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("Index", "Currency")",
+            data: { model: model },
+            dataType: 'json',
+            success: function (response) {
+                console.log(response.amount);
+            },
+            error: function (response) {
+
+            }
+        });
+    })
+</script>

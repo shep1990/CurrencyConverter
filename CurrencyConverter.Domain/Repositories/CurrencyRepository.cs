@@ -1,8 +1,6 @@
 ﻿using CurrencyConverter.Domain.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CurrencyConverter.Domain.Repositories

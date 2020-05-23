@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CurrencyConverter.Domain;
 using CurrencyConverter.Domain.Repositories;
 using CurrencyConverter.Domain.Services;
+using FixerSharp;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -29,6 +30,8 @@ namespace CurrencyConverter
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            Fixer.SetApiKey("b78aaa9c9729d9e3331c7e7df50c2a1b");
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
