@@ -7,47 +7,85 @@
 
 <h1>Index</h1>
 
-<form>
-    <fieldset class="id-docs">
+<form role="form" id="addForm" method="post">
+    <div class="form-group">
         <div class="form-label-group">
-            @Html.DropDownList(nameof(Model.SourceCurrencyId), Model.CurrencyTypes, "Source Currency", new { @class = "form-control", required = "required" })
             @Html.Label(nameof(Model.SourceCurrencyId), "Currency")
-        </div>
-    </fieldset>
-    <fieldset class="id-docs">
-        <div class="form-label-group">
-            @Html.DropDownList(nameof(Model.TargetCurrencyId), Model.CurrencyTypes, "Target Currency", new { @class = "form-control", required = "required" })
-            @Html.Label(nameof(Model.TargetCurrencyId), "Currency")
-        </div>
-    </fieldset>
-    <div class="form-label-group-wrapper">
-        <div class="form-label-group">
-            @Html.TextBox(nameof(Model.Amount), String.Empty, new { @class = "form-control", type = "text", name = "amount", required = "required" })
-            @Html.Label(nameof(Model.Amount), "Amount")
+            @Html.DropDownList(nameof(Model.SourceCurrencyId), Model.CurrencyTypes, "Source Currency", new { @class = "form-control" })
         </div>
     </div>
+    <div class="form-group">
+        <div class="form-label-group">
+            @Html.Label(nameof(Model.TargetCurrencyId), "Currency")
+            @Html.DropDownList(nameof(Model.TargetCurrencyId), Model.CurrencyTypes, "Target Currency", new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-label-group">
+            @Html.Label(nameof(Model.Amount), "Amount")
+            @Html.TextBox(nameof(Model.Amount), String.Empty, new { @class = "form-control", type = "text" })
+        </div>
+    </div>
+    <button name="submit" id="submit" value="" type="submit" class="btn btn-large btn-primary btn-block">Add</button>
+
+    <div class="convertedCurrency card">
+        <h2>Your amount</h2>
+        <h3></h3>
+    </div>
 </form>
-<button class="submit" type="button"></button>
 
-<script src="~/lib/jquery/dist/jquery.js"></script>
 <script>
-        $('.submit').on('click', function () {
-        var model = {
-            sourceCurrency: $("#SourceCurrencyId option:selected").text(),
-            targetCurrency: $("#TargetCurrencyId option:selected").text(),
-            amount: $("#Amount").val()
-        }
-        $.ajax({
-            type: "POST",
-            url: "@Url.Action("Index", "Currency")",
-            data: { model: model },
-            dataType: 'json',
-            success: function (response) {
-                console.log(response.amount);
+$(document).ready(function () {
+    $("#addForm").validate({
+        rules: {
+            Amount: {
+                required: true,
+                minlength: 2,
+                maxlength: 10,
             },
-            error: function (response) {
-
+            TargetCurrencyId: {
+                required: true,
+            },
+            SourceCurrencyId: {
+                required: true,
             }
-        });
-    })
+        },
+        highlight: function (element) {
+            $(element).closest('.form-group').addClass('has-error');
+        },
+        messages: {
+            Amount: {
+                required: "This field is required",
+                minlength: "Name must be at least 2 characters",
+                maxlength: "Maximum number of characters - 10",
+            },
+            SourceCurrencyId: {
+                required: "This field is required",
+            },
+            TargetCurrencyId: {
+                required: "This field is required",
+            },
+        },
+        submitHandler: function (form) {
+            var model = {
+                sourceCurrency: $("#SourceCurrencyId option:selected").text(),
+                targetCurrency: $("#TargetCurrencyId option:selected").text(),
+                amount: $("#Amount").val()
+            }
+            $.ajax({
+                type: "POST",
+                url: "@Url.Action("Index", "Currency")",
+                data: { model: model },
+                dataType: 'json',
+                success: function (response) {
+                    $(".convertedCurrency h3").html(response.amount);
+                },
+                error: function (response) {
+                    $(".convertedCurrency h3").html(response.responseText);
+                }
+            });
+            return false; // required to block normal submit since you used ajax
+        }
+    });
+})
 </script>

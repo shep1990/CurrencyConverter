@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using CurrencyConverter.Domain.Services;
 using CurrencyConverter.Models;
@@ -17,7 +19,6 @@ namespace CurrencyConverter.Controllers
             _currencyService = currencyService;
         }
 
-        // GET: Currency
         public async Task<ActionResult> Index()
         {
             var currencyList = await _currencyService.GetCurrencies();
@@ -31,22 +32,31 @@ namespace CurrencyConverter.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> Index(CurrencyViewModel model)
+        public async Task<IActionResult> Index(CurrencyViewModel model)
         {
-            double convertedAmount = await Fixer.ConvertAsync(
-                model.SourceCurrency, 
-                model.TargetCurrency, 
-                model.Amount
-            );
+            try{
+                var convertedAmount = await Fixer.ConvertAsync(
+                    model.SourceCurrency,
+                    model.TargetCurrency,
+                    model.Amount
+                );
 
-            var response = new
+                var response = new
+                {
+                    amount = Math.Round(convertedAmount, 2),
+                };
+
+                return Ok(response);
+            }
+            catch(Exception ex)
             {
-                amount = convertedAmount,
-            };
+                var response = new
+                {
+                    responseText = "An error occurred, please check your input and try again"
+                };
 
-            return Json(response);
-
-
+                return BadRequest(response);
+            }
         }
     }
 }
