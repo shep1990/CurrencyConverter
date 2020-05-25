@@ -4,14 +4,16 @@ using CurrencyConverter.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CurrencyConverter.Domain.Migrations
 {
     [DbContext(typeof(CurrencyConverterDbContext))]
-    partial class CurrencyConverterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200525193139_CurrencyLogging_ChangeDecimalToDoubleOnRateColumn")]
+    partial class CurrencyLogging_ChangeDecimalToDoubleOnRateColumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

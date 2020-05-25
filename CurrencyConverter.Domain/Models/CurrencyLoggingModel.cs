@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
 using System.Text;
 
-namespace CurrencyConverter.Domain.Data
+namespace CurrencyConverter.Domain.Models
 {
-    public class CurrencyLoggingEntity
+    public class CurrencyLoggingModel
     {
-        public Guid Id { get; set; }
-
         public Guid SourceCurrencyId { get; set; }
 
         public Guid TargetCurrencyId { get; set; }
@@ -18,7 +15,5 @@ namespace CurrencyConverter.Domain.Data
         public double Rate { get; set; }
 
         public DateTime DateLogged { get; set; }
-
-        public virtual CurrencyEntity Currency { get; set; }
     }
 }

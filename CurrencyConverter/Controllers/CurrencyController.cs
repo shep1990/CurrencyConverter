@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CurrencyConverter.Domain.Models;
 using CurrencyConverter.Domain.Services;
 using CurrencyConverter.Models;
 using FixerSharp;
@@ -14,11 +15,16 @@ namespace CurrencyConverter.Controllers
     public class CurrencyController : Controller
     {
         private readonly ICurrencyService _currencyService;
+        private readonly ICurrencyLoggingService _currencyLoggingService;
         private readonly ILog _logger = LogManager.GetLogger(typeof(CurrencyController));
 
-        public CurrencyController(ICurrencyService currencyService)
+        public CurrencyController(
+            ICurrencyService currencyService,
+            ICurrencyLoggingService currencyLoggingService
+        )
         {
             _currencyService = currencyService;
+            _currencyLoggingService = currencyLoggingService;
         }
 
         public async Task<ActionResult> Index()
@@ -43,10 +49,23 @@ namespace CurrencyConverter.Controllers
                     model.Amount
                 );
 
+                var exchangeRate = await Fixer.RateAsync(model.SourceCurrency, model.TargetCurrency);
+
                 var response = new
                 {
                     amount = Math.Round(convertedAmount, 2).ToString("N2"),
                 };
+
+                var request = new CurrencyLoggingModel
+                {
+                    Amount = model.Amount,
+                    SourceCurrencyId = model.SourceCurrencyId,
+                    TargetCurrencyId = model.TargetCurrencyId,
+                    DateLogged = DateTime.UtcNow,
+                    Rate = exchangeRate.Rate
+                };
+
+                await _currencyLoggingService.AddCurrencyLog(request);
 
                 return Ok(response);
             }

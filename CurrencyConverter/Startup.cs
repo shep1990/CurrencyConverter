@@ -42,7 +42,9 @@ namespace CurrencyConverter
             });
 
             services.AddScoped<ICurrencyService, CurrencyService>();
+            services.AddScoped<ICurrencyLoggingService, CurrencyLoggingService>();
             services.AddScoped<ICurrencyRepository, CurrencyRepository>();
+            services.AddScoped<ICurrencyLoggingRepository, CurrencyLoggingRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>(
                 sp =>
                 {

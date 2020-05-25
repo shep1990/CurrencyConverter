@@ -67,7 +67,9 @@ $(document).ready(function () {
         submitHandler: function (form) {
             var model = {
                 sourceCurrency: $("#SourceCurrencyId option:selected").text(),
+                sourceCurrencyId: $("#SourceCurrencyId").val(),
                 targetCurrency: $("#TargetCurrencyId option:selected").text(),
+                targetCurrencyId: $("#TargetCurrencyId").val(),
                 amount: $("#Amount").val()
             }
             $.ajax({

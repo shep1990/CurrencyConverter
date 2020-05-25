@@ -1,6 +1,6 @@
 ﻿using CurrencyConverter.Domain.Data;
+using CurrencyConverter.Domain.Models;
 using CurrencyConverter.Domain.Repositories;
-using CurrencyConverter.Library;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,11 +17,22 @@ namespace CurrencyConverter.Domain.Services
             _currencyRepository = currencyRepository;
         }
 
-        public async Task<List<CurrencyEntity>> GetCurrencies()
+        public async Task<List<CurrencyModel>> GetCurrencies()
         {
+            var currencyModelList = new List<CurrencyModel>();
+
             var currencyList = await _currencyRepository.GetAsync();
 
-            return currencyList;
+            foreach (var currency in currencyList)
+            {
+                currencyModelList.Add(new CurrencyModel
+                {
+                    Id = currency.Id,
+                    CurrencyName = currency.CurrencyName
+                });
+            }
+
+            return currencyModelList;
         }
     }
 }
