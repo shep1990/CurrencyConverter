@@ -40,8 +40,7 @@ $(document).ready(function () {
         rules: {
             Amount: {
                 required: true,
-                minlength: 2,
-                maxlength: 10,
+                number: true,
             },
             TargetCurrencyId: {
                 required: true,
@@ -55,15 +54,14 @@ $(document).ready(function () {
         },
         messages: {
             Amount: {
-                required: "This field is required",
-                minlength: "Name must be at least 2 characters",
-                maxlength: "Maximum number of characters - 10",
+                required: "The amount field is required",
+                number: "Please enter a number"
             },
             SourceCurrencyId: {
-                required: "This field is required",
+                required: "Please select a source currency",
             },
             TargetCurrencyId: {
-                required: "This field is required",
+                required: "Please select a target currency",
             },
         },
         submitHandler: function (form) {
@@ -81,7 +79,7 @@ $(document).ready(function () {
                     $(".convertedCurrency h3").html(response.amount);
                 },
                 error: function (response) {
-                    $(".convertedCurrency h3").html(response.responseText);
+                    $(".convertedCurrency h3").html("An error occurred, please check your input and try again");
                 }
             });
             return false; // required to block normal submit since you used ajax

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using CurrencyConverter.Domain.Services;
 using CurrencyConverter.Models;
 using FixerSharp;
+using log4net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -13,6 +14,7 @@ namespace CurrencyConverter.Controllers
     public class CurrencyController : Controller
     {
         private readonly ICurrencyService _currencyService;
+        private readonly ILog _logger = LogManager.GetLogger(typeof(CurrencyController));
 
         public CurrencyController(ICurrencyService currencyService)
         {
@@ -43,19 +45,15 @@ namespace CurrencyConverter.Controllers
 
                 var response = new
                 {
-                    amount = Math.Round(convertedAmount, 2),
+                    amount = Math.Round(convertedAmount, 2).ToString("N2"),
                 };
 
                 return Ok(response);
             }
             catch(Exception ex)
             {
-                var response = new
-                {
-                    responseText = "An error occurred, please check your input and try again"
-                };
-
-                return BadRequest(response);
+                _logger.Error(string.Format("An error occurred while converting the currency ({0} to {1} for {2}) : {3}", model.SourceCurrency, model.TargetCurrency, model.Amount, ex.Message));
+                return BadRequest();
             }
         }
     }

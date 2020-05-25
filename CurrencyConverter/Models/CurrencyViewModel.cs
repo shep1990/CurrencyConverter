@@ -6,7 +6,7 @@ namespace CurrencyConverter.Models
     public class CurrencyViewModel
     {
         public Guid UserId { get; set; }
-        public int Amount { get; set; }
+        public double Amount { get; set; }
         public string SourceCurrency { get; set; }
         public string TargetCurrency { get; set; }
         public Guid SourceCurrencyId { get; set; }

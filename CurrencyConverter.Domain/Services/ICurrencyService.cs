@@ -1,4 +1,5 @@
-﻿using CurrencyConverter.Library;
+﻿using CurrencyConverter.Domain.Data;
+using CurrencyConverter.Library;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -8,6 +9,6 @@ namespace CurrencyConverter.Domain.Services
 {
     public interface ICurrencyService
     {
-        Task<List<CurrencyModel>> GetCurrencies();
+        Task<List<CurrencyEntity>> GetCurrencies();
     }
 }

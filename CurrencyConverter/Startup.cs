@@ -15,14 +15,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace CurrencyConverter
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, ILoggerFactory loggerFactory)
         {
             Configuration = configuration;
+            loggerFactory.AddLog4Net("log4net.config");
         }
 
         public IConfiguration Configuration { get; }
@@ -30,7 +32,7 @@ namespace CurrencyConverter
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            Fixer.SetApiKey("b78aaa9c9729d9e3331c7e7df50c2a1b");
+            Fixer.SetApiKey(Configuration.GetSection("CurrencyConverterApiKey").Value);
 
             services.Configure<CookiePolicyOptions>(options =>
             {
