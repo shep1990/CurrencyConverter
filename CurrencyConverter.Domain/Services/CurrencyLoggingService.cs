@@ -20,5 +20,31 @@ namespace CurrencyConverter.Domain.Services
         {
             return await _currencyLoggingRepository.AddCurrencyLog(model);
         }
+
+        public async Task<List<CurrencyLoggingModel>> GetCurrencyLogs(DateTime fromDate, DateTime toDate, Guid sourceCurrencyId, Guid targetCurrencyId)
+        {
+            var currencyLogsList = new List<CurrencyLoggingModel>();
+
+            var currencyLogsEntity = await _currencyLoggingRepository.GetCurrencyLogs(
+                c => c.SourceCurrencyId == sourceCurrencyId && 
+                c.TargetCurrencyId == targetCurrencyId &&
+                c.DateLogged >= fromDate &&
+                c.DateLogged < toDate
+            );
+
+            foreach (var currencyLogItem in currencyLogsEntity)
+            {
+                currencyLogsList.Add(new CurrencyLoggingModel
+                {
+                    Amount = currencyLogItem.Amount,
+                    DateLogged = currencyLogItem.DateLogged,
+                    Rate = currencyLogItem.Rate,
+                    SourceCurrency = currencyLogItem.SourceCurrency.CurrencyName,
+                    TargetCurrency = currencyLogItem.TargetCurrency.CurrencyName
+                });
+            }
+
+            return currencyLogsList;
+        }
     }
 }

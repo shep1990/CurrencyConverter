@@ -12,6 +12,9 @@ namespace CurrencyConverter.Models
         public Guid SourceCurrencyId { get; set; }
         public Guid TargetCurrencyId { get; set; }
 
+        public DateTime FromDate { get; set; }
+        public DateTime ToDate { get; set; }
+
         public SelectList CurrencyTypes { get; set; }
 
     }

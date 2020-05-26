@@ -19,6 +19,8 @@ namespace CurrencyConverter.Domain.Data
 
         public DateTime DateLogged { get; set; }
 
-        public virtual CurrencyEntity Currency { get; set; }
+        public virtual CurrencyEntity SourceCurrency { get; set; }
+
+        public virtual CurrencyEntity TargetCurrency { get; set; }
     }
 }

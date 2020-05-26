@@ -9,5 +9,7 @@ namespace CurrencyConverter.Domain.Services
     public interface ICurrencyLoggingService
     {
         Task<int> AddCurrencyLog(CurrencyLoggingModel model);
+
+        Task<List<CurrencyLoggingModel>> GetCurrencyLogs(DateTime fromDate, DateTime toDate, Guid sourceCurrencyId, Guid targetCurrencyId);
     }
 }

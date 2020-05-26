@@ -19,13 +19,13 @@ namespace CurrencyConverter.Domain.EntityConfiguration
             builder.Property(x => x.Id)
                 .ValueGeneratedOnAdd();
 
-            builder.HasOne(x => x.Currency)
+            builder.HasOne(x => x.SourceCurrency)
                 .WithMany()
                 .HasForeignKey(x => x.SourceCurrencyId)
                 .Metadata
                 .DeleteBehavior = DeleteBehavior.Restrict;
 
-            builder.HasOne(x => x.Currency)
+            builder.HasOne(x => x.TargetCurrency)
                 .WithMany()
                 .HasForeignKey(x => x.TargetCurrencyId)
                 .Metadata

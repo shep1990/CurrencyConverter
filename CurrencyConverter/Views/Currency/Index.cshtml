@@ -26,6 +26,18 @@
             @Html.TextBox(nameof(Model.Amount), String.Empty, new { @class = "form-control", type = "text" })
         </div>
     </div>
+    <div class="form-group">
+        <div class="form-label-group">
+            @Html.Label(nameof(Model.FromDate), "From Date")
+            @Html.TextBox(nameof(Model.FromDate), String.Empty, new { @class = "form-control", type = "text" })
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="form-label-group">
+            @Html.Label(nameof(Model.ToDate), "To Date")
+            @Html.TextBox(nameof(Model.ToDate), String.Empty, new { @class = "form-control", type = "text" })
+        </div>
+    </div>
     <button name="submit" id="submit" value="" type="submit" class="btn btn-large btn-primary btn-block">Add</button>
 
     <div class="convertedCurrency card">
@@ -70,15 +82,18 @@ $(document).ready(function () {
                 sourceCurrencyId: $("#SourceCurrencyId").val(),
                 targetCurrency: $("#TargetCurrencyId option:selected").text(),
                 targetCurrencyId: $("#TargetCurrencyId").val(),
+                fromDate: $('#FromDate').val(),
+                toDate: $('#ToDate').val(),
                 amount: $("#Amount").val()
             }
             $.ajax({
                 type: "POST",
-                url: "@Url.Action("Index", "Currency")",
+                url: "@Url.Action("ConvertAmount", "Currency")",
                 data: { model: model },
                 dataType: 'json',
                 success: function (response) {
                     $(".convertedCurrency h3").html(response.amount);
+                    console.log(response.returnedLogs)
                 },
                 error: function (response) {
                     $(".convertedCurrency h3").html("An error occurred, please check your input and try again");
