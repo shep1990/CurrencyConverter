@@ -27,7 +27,8 @@ namespace CurrencyConverter.Domain.Repositories
                 TargetCurrencyId = model.TargetCurrencyId,
                 Amount = model.Amount,
                 Rate = model.Rate,
-                DateLogged = model.DateLogged
+                DateLogged = model.DateLogged,
+                ConvertedAmount = model.ConvertedAmount
             };
 
             _unitOfWork.Context.Set<CurrencyLoggingEntity>().Add(entity);

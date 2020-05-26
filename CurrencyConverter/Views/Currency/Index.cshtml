@@ -40,10 +40,8 @@
     </div>
     <button name="submit" id="submit" value="" type="submit" class="btn btn-large btn-primary btn-block">Add</button>
 
-    <div class="convertedCurrency card">
-        <h2>Your amount</h2>
-        <h3></h3>
-    </div>
+    <div class="convertedCurrency"></div>
+    <div class="currencyLog"></div>
 </form>
 
 <script>
@@ -92,8 +90,24 @@ $(document).ready(function () {
                 data: { model: model },
                 dataType: 'json',
                 success: function (response) {
-                    $(".convertedCurrency h3").html(response.amount);
-                    console.log(response.returnedLogs)
+                    $(".convertedCurrency").append(
+                        "<div class='card'>" +
+                            "<h2>Converted Amount</h2>" +
+                            "<h3>" + response.amount + "</h3>" +
+                        "</div>"
+                    )
+                    $.each(response.returnedLogs, function (index, value) {
+                        $(".currencyLog").append(
+                            "<div class='card row'>" +
+                                "<div class='col-md-3'><strong>Source Currency</strong><p>" + value.sourceCurrency + "</p></div>" +
+                                "<div class='col-md-3'><strong>Target Currency</strong><p>" + value.targetCurrency + "</p></div>" +
+                                "<div class='col-md-3'><strong>Original Rate</strong><p>" + value.rate + "</p></div>" +
+                                "<div class='col-md-3'><strong>Original Amount</strong><p>" + value.amount + "</p></div>" +
+                                "<div class='col-md-3'><strong>Converted Amount</strong><p>" + value.convertedAmount + "</p></div>" +
+                                "<div class='col-md-3'><strong>Date</strong><p>" + value.dateLogged + "</p></div>" +
+                            "</div>"
+                        )
+                    });
                 },
                 error: function (response) {
                     $(".convertedCurrency h3").html("An error occurred, please check your input and try again");

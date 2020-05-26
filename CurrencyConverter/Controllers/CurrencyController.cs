@@ -45,15 +45,14 @@ namespace CurrencyConverter.Controllers
         public async Task<IActionResult> ConvertAmount(CurrencyViewModel model)
         {
             try{
-                var convertedAmount = await Fixer.ConvertAsync(
-                    model.SourceCurrency,
-                    model.TargetCurrency,
-                    model.Amount
-                );
+                var convertedAmount = Math.Round(await Fixer.ConvertAsync(
+                    model.SourceCurrency, 
+                    model.TargetCurrency, 
+                    model.Amount), 2).ToString("N2");
 
                 var exchangeRate = await Fixer.RateAsync(model.SourceCurrency, model.TargetCurrency);
 
-                await LogCurrencyConversion(model, exchangeRate.Rate);
+                await LogCurrencyConversion(model, exchangeRate.Rate, convertedAmount);
 
                 var currencyLogs = new List<CurrencyLoggingModel>();
                 if(model.FromDate != null && model.ToDate != null)
@@ -68,7 +67,7 @@ namespace CurrencyConverter.Controllers
 
                 var response = new
                 {
-                    amount = Math.Round(convertedAmount, 2).ToString("N2"),
+                    amount = convertedAmount,
                     returnedLogs = currencyLogs
                 };
 
@@ -81,7 +80,7 @@ namespace CurrencyConverter.Controllers
             }
         }
 
-        private async Task LogCurrencyConversion(CurrencyViewModel model, double excahngeRate)
+        private async Task LogCurrencyConversion(CurrencyViewModel model, double excahngeRate, string convertedAmount)
         {
             var request = new CurrencyLoggingModel
             {
@@ -89,7 +88,8 @@ namespace CurrencyConverter.Controllers
                 SourceCurrencyId = model.SourceCurrencyId,
                 TargetCurrencyId = model.TargetCurrencyId,
                 DateLogged = DateTime.UtcNow,
-                Rate = excahngeRate
+                Rate = excahngeRate,
+                ConvertedAmount = convertedAmount
             };
 
             await _currencyLoggingService.AddCurrencyLog(request);

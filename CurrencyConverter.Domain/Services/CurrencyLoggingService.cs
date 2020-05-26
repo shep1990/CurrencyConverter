@@ -40,7 +40,8 @@ namespace CurrencyConverter.Domain.Services
                     DateLogged = currencyLogItem.DateLogged,
                     Rate = currencyLogItem.Rate,
                     SourceCurrency = currencyLogItem.SourceCurrency.CurrencyName,
-                    TargetCurrency = currencyLogItem.TargetCurrency.CurrencyName
+                    TargetCurrency = currencyLogItem.TargetCurrency.CurrencyName,
+                    ConvertedAmount = currencyLogItem.ConvertedAmount
                 });
             }
 

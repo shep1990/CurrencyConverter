@@ -7,12 +7,13 @@ namespace CurrencyConverter.Domain.Models
     public class CurrencyLoggingModel
     {
         public Guid SourceCurrencyId { get; set; }
+        public Guid TargetCurrencyId { get; set; }
 
         public string SourceCurrency { get; set; }
 
-        public Guid TargetCurrencyId { get; set; }
-
         public string TargetCurrency { get; set; }
+
+        public string ConvertedAmount { get; set; }
 
         public double Amount { get; set; }
 

@@ -17,6 +17,8 @@ namespace CurrencyConverter.Domain.Data
 
         public double Rate { get; set; }
 
+        public string ConvertedAmount { get; set; }
+
         public DateTime DateLogged { get; set; }
 
         public virtual CurrencyEntity SourceCurrency { get; set; }
