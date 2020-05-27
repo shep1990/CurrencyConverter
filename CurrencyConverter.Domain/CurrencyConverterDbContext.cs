@@ -9,7 +9,6 @@ namespace CurrencyConverter.Domain
     public class CurrencyConverterDbContext : DbContext
     {
         public DbSet<CurrencyEntity> Currencies { get; set; }
-        public DbSet<UserEntity> Users { get; set; }
         public DbSet<CurrencyLoggingEntity> CurrencyLogs { get; set; }
 
         public CurrencyConverterDbContext(DbContextOptions<CurrencyConverterDbContext> options)
@@ -19,7 +18,6 @@ namespace CurrencyConverter.Domain
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new CurrencyEntityConfigurations());
-            builder.ApplyConfiguration(new UserEntityConfigurations());
             builder.ApplyConfiguration(new CurrencyLoggingEntityConfigurations());
             builder.Seed();
         }

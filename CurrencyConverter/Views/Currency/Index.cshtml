@@ -23,98 +23,127 @@
     <div class="form-group">
         <div class="form-label-group">
             @Html.Label(nameof(Model.Amount), "Amount")
-            @Html.TextBox(nameof(Model.Amount), String.Empty, new { @class = "form-control", type = "text" })
+            @Html.TextBox(nameof(Model.Amount), String.Empty, new { @class = "form-control", type = "text", placeholder = "Please enter an amount" })
         </div>
     </div>
+    <p>If you'd like to see the previous rates and conversions for your selected currencies then please enter the date range below</p>
     <div class="form-group">
         <div class="form-label-group">
             @Html.Label(nameof(Model.FromDate), "From Date")
-            @Html.TextBox(nameof(Model.FromDate), String.Empty, new { @class = "form-control", type = "text" })
+            @Html.TextBox(nameof(Model.FromDate), String.Empty, new { @class = "form-control", type = "text", placeholder = "Please select a start date" })
         </div>
     </div>
     <div class="form-group">
         <div class="form-label-group">
             @Html.Label(nameof(Model.ToDate), "To Date")
-            @Html.TextBox(nameof(Model.ToDate), String.Empty, new { @class = "form-control", type = "text" })
+            @Html.TextBox(nameof(Model.ToDate), String.Empty, new { @class = "form-control", type = "text", placeholder = "Please select an end date" })
         </div>
     </div>
-    <button name="submit" id="submit" value="" type="submit" class="btn btn-large btn-primary btn-block">Add</button>
+    <button name="submit" id="submit" value="" type="submit" class="btn btn-large btn-primary btn-block">Convert Currency</button>
 
     <div class="convertedCurrency"></div>
+    
+    <div class="previousRates">
+        <h2>Previous Rates</h2>
+    </div>
     <div class="currencyLog"></div>
 </form>
 
+@section Scripts {
 <script>
-$(document).ready(function () {
-    $("#addForm").validate({
-        rules: {
-            Amount: {
-                required: true,
-                number: true,
+    $(document).ready(function () {
+        $(".previousRates").hide();
+        $('#FromDate').datepicker({ dateFormat: 'dd/mm/yy' });
+        $('#ToDate').datepicker({ dateFormat: 'dd/mm/yy' });
+
+        $("#FromDate").attr("autocomplete", "off");
+        $("#ToDate").attr("autocomplete", "off");
+
+        $("#addForm").validate({
+            rules: {
+                Amount: {
+                    required: true,
+                    number: true,
+                },
+                TargetCurrencyId: {
+                    required: true,
+                },
+                SourceCurrencyId: {
+                    required: true,
+                },
+                ToDate: {
+                    greaterThan: "#FromDate",
+                }
             },
-            TargetCurrencyId: {
-                required: true,
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
             },
-            SourceCurrencyId: {
-                required: true,
-            }
-        },
-        highlight: function (element) {
-            $(element).closest('.form-group').addClass('has-error');
-        },
-        messages: {
-            Amount: {
-                required: "The amount field is required",
-                number: "Please enter a number"
+            messages: {
+                Amount: {
+                    required: "The amount field is required",
+                    number: "Please enter a number"
+                },
+                SourceCurrencyId: {
+                    required: "Please select a source currency",
+                },
+                TargetCurrencyId: {
+                    required: "Please select a target currency",
+                },
+                ToDate: {
+                    greaterThan: "Please select an end date greater than the start date",
+                }
             },
-            SourceCurrencyId: {
-                required: "Please select a source currency",
-            },
-            TargetCurrencyId: {
-                required: "Please select a target currency",
-            },
-        },
-        submitHandler: function (form) {
-            var model = {
-                sourceCurrency: $("#SourceCurrencyId option:selected").text(),
-                sourceCurrencyId: $("#SourceCurrencyId").val(),
-                targetCurrency: $("#TargetCurrencyId option:selected").text(),
-                targetCurrencyId: $("#TargetCurrencyId").val(),
-                fromDate: $('#FromDate').val(),
-                toDate: $('#ToDate').val(),
-                amount: $("#Amount").val()
-            }
-            $.ajax({
-                type: "POST",
-                url: "@Url.Action("ConvertAmount", "Currency")",
-                data: { model: model },
-                dataType: 'json',
-                success: function (response) {
-                    $(".convertedCurrency").append(
-                        "<div class='card'>" +
+            submitHandler: function (form) {
+                var model = {
+                    sourceCurrency: $("#SourceCurrencyId option:selected").text(),
+                    sourceCurrencyId: $("#SourceCurrencyId").val(),
+                    targetCurrency: $("#TargetCurrencyId option:selected").text(),
+                    targetCurrencyId: $("#TargetCurrencyId").val(),
+                    fromDate: $('#FromDate').val(),
+                    toDate: $('#ToDate').val(),
+                    amount: $("#Amount").val()
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "@Url.Action("ConvertAmount", "Currency")",
+                    data: { model: model },
+                    dataType: 'json',
+                    success: function (response) {
+                        $(".convertedCurrency").append(
+                            "<div class='card'>" +
                             "<h2>Converted Amount</h2>" +
                             "<h3>" + response.amount + "</h3>" +
-                        "</div>"
-                    )
-                    $.each(response.returnedLogs, function (index, value) {
-                        $(".currencyLog").append(
-                            "<div class='card row'>" +
+                            "</div>"
+                        )
+                        $.each(response.returnedLogs, function (index, value) {
+                            $(".previousRates").show();
+                            $(".currencyLog").append(
+                                "<div class='card row'>" +
                                 "<div class='col-md-3'><strong>Source Currency</strong><p>" + value.sourceCurrency + "</p></div>" +
                                 "<div class='col-md-3'><strong>Target Currency</strong><p>" + value.targetCurrency + "</p></div>" +
                                 "<div class='col-md-3'><strong>Original Rate</strong><p>" + value.rate + "</p></div>" +
                                 "<div class='col-md-3'><strong>Original Amount</strong><p>" + value.amount + "</p></div>" +
                                 "<div class='col-md-3'><strong>Converted Amount</strong><p>" + value.convertedAmount + "</p></div>" +
                                 "<div class='col-md-3'><strong>Date</strong><p>" + value.dateLogged + "</p></div>" +
-                            "</div>"
-                        )
-                    });
-                },
-                error: function (response) {
-                    $(".convertedCurrency h3").html("An error occurred, please check your input and try again");
-                }
-            });
-            return false; // required to block normal submit since you used ajax
-        }
-    });
-})
+                                "</div>"
+                            )
+                        });
+                    },
+                    error: function (response) {
+                        $(".convertedCurrency h3").html("An error occurred, please check your input and try again");
+                    }
+                });
+                return false; // required to block normal submit since you used ajax
+            }
+        });
+
+        $.validator.addMethod('greaterThan', function (value, element) {
+
+            var dateFrom = $("#FromDate").val();
+            var dateTo = $('#ToDate').val();
+
+            return dateTo > dateFrom;
+        })
+    })
 </script>
+}
